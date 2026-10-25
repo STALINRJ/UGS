@@ -1,0 +1,121 @@
+import { useState, useEffect, useRef } from 'react';
+import { ArrowRight } from 'lucide-react';
+import { useReveal, useStaggerReveal } from '../hooks/useReveal';
+import { products, categories, type Product } from '../data/products';
+
+export default function Products() {
+  const [active, setActive] = useState('ALL');
+  const filtered = active === 'ALL' ? products : products.filter((p) => p.cat === active);
+  const headerRef = useReveal<HTMLDivElement>();
+  const gridRef = useStaggerReveal<HTMLDivElement>();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const filter = (e as CustomEvent<string>).detail;
+      setActive(filter);
+    };
+    window.addEventListener('set-product-filter', handler);
+    return () => window.removeEventListener('set-product-filter', handler);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          setActive('ALL');
+        }
+      },
+      { threshold: 0 }
+    );
+    const el = sectionRef.current;
+    if (el) observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const openProduct = (p: Product) => {
+    window.dispatchEvent(new CustomEvent('open-product', { detail: p.title }));
+  };
+
+  return (
+    <section ref={sectionRef} id="products" className="bg-brand-warm py-24 px-6">
+      <div className="max-w-[1400px] mx-auto">
+        {/* Header */}
+        <div ref={headerRef} className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-8 h-[1px] bg-brand-red" />
+              <span className="text-brand-red text-[11px] font-bold tracking-[0.3em] uppercase">
+                OUR PRODUCTS
+              </span>
+            </div>
+            <h2 className="font-display text-[#1a1a1a] text-[56px] md:text-[72px] leading-[0.95]">
+              EXPLORE OUR <span className="text-brand-red">RANGE</span>
+            </h2>
+          </div>
+          <p className="text-gray-500 text-[14px] max-w-[380px] leading-[1.7]">
+            From precision spare parts to high-end offset printing machines, we offer everything your press room needs.
+          </p>
+        </div>
+
+        {/* Filter tabs */}
+        <div className="flex flex-wrap gap-3 mb-12">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActive(cat)}
+              className={`text-[11px] font-bold tracking-[0.18em] uppercase px-6 py-3 border transition-all duration-300 ease-engineered ${
+                active === cat
+                  ? 'bg-brand-dark text-white border-brand-dark'
+                  : 'bg-white text-gray-600 border-gray-200 hover:border-brand-dark'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Grid */}
+        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {filtered.map((p) => (
+            <div
+              key={p.title}
+              onClick={() => openProduct(p)}
+              className="bg-white overflow-hidden group cursor-pointer card-lift hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)]"
+            >
+              <div className="relative overflow-hidden aspect-[4/3]">
+                <img
+                  src={p.img}
+                  alt={p.title}
+                  className="w-full h-full object-cover img-zoom"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <span className="absolute top-3 left-3 bg-brand-red text-white text-[9px] font-bold tracking-[0.18em] px-3 py-1.5">
+                  {p.tag}
+                </span>
+                {p.condition && (
+                  <span
+                    className={`absolute top-3 right-3 text-white text-[9px] font-bold tracking-[0.15em] px-3 py-1.5 ${
+                      p.condition === 'Brand New'
+                        ? 'bg-emerald-600'
+                        : 'bg-amber-600'
+                    }`}
+                  >
+                    {p.condition.toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <div className="p-6">
+                <div className="text-gray-400 text-[10px] font-bold tracking-[0.2em] mb-2">{p.cat}</div>
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display text-[#1a1a1a] text-[22px] leading-none tracking-wide">{p.title}</h3>
+                  <ArrowRight size={16} className="text-brand-red group-hover:translate-x-1 transition-transform duration-300" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
