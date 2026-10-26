@@ -1,3 +1,4 @@
+import { navigateTo } from '../utils/navigation';
 import { Settings, Wrench, Truck, Headphones, ArrowRight } from 'lucide-react';
 import { useReveal, useStaggerReveal } from '../hooks/useReveal';
 
@@ -30,15 +31,14 @@ const services = [
 
 export default function Services() {
   const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    navigateTo(href);
   };
 
   const leftRef = useReveal<HTMLDivElement>();
   const gridRef = useStaggerReveal<HTMLDivElement>();
 
   return (
-    <section id="services" className="bg-brand-dark py-24 px-6">
+    <section id="services" className="bg-brand-dark py-16 md:py-24 px-5 sm:px-8">
       <div className="max-w-[1400px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Left intro */}
@@ -78,7 +78,7 @@ export default function Services() {
                   <span className="font-display text-white/[0.06] text-[56px] leading-none">{num}</span>
                 </div>
                 <h3 className="font-display text-white text-[24px] tracking-wide mb-3 leading-tight">{title}</h3>
-                <p className="text-gray-500 text-[13px] leading-[1.7]">{desc}</p>
+                <p className="text-gray-500 text-[14px] leading-[1.7]">{desc}</p>
               </div>
             ))}
           </div>

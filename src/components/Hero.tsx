@@ -1,3 +1,4 @@
+import { navigateTo } from '../utils/navigation';
 import { ArrowRight } from 'lucide-react';
 import { useReveal } from '../hooks/useReveal';
 
@@ -10,8 +11,7 @@ const stats = [
 
 export default function Hero() {
   const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    navigateTo(href);
   };
 
   const statsRef = useReveal<HTMLDivElement>();
@@ -31,7 +31,7 @@ export default function Hero() {
       </div>
 
       {/* Hero content */}
-      <div className="relative flex-1 flex items-center pt-[72px]">
+      <div className="relative flex-1 flex items-center pt-[88px] lg:pt-[104px]">
         <div className="max-w-[1400px] mx-auto px-6 w-full py-20">
           <div className="max-w-[680px]">
             <div className="flex items-center gap-3 mb-8">
@@ -42,9 +42,9 @@ export default function Hero() {
             </div>
 
             <h1 className="font-display text-white leading-[0.92] mb-8">
-              <span className="block text-[64px] sm:text-[84px] lg:text-[100px]">PRECISION IN</span>
-              <span className="block text-[64px] sm:text-[84px] lg:text-[100px]">EVERY</span>
-              <span className="block text-brand-red text-[88px] sm:text-[120px] lg:text-[148px] leading-[0.85]">
+              <span className="block text-[clamp(2.75rem,9vw,6.25rem)]">PRECISION IN</span>
+              <span className="block text-[clamp(2.75rem,9vw,6.25rem)]">EVERY</span>
+              <span className="block text-brand-red text-[clamp(3.15rem,11.3vw,9.25rem)] leading-[0.85]">
                 IMPRESSION
               </span>
             </h1>
@@ -73,7 +73,7 @@ export default function Hero() {
             {stats.map(({ num, sub }) => (
               <div key={sub} className="flex flex-col justify-center px-6 py-6">
                 <div className="font-display text-white text-[32px] leading-none mb-1.5">{num}</div>
-                <div className="text-gray-500 text-[10px] font-bold tracking-[0.18em]">{sub}</div>
+                <div className="text-gray-500 text-[12px] font-bold tracking-[0.18em]">{sub}</div>
               </div>
             ))}
           </div>

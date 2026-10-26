@@ -1,3 +1,4 @@
+import { navigateTo } from '../utils/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { Menu, X, ArrowRight } from 'lucide-react';
 import logoMain from '../assets/logo_main.png';
@@ -18,8 +19,9 @@ export default function Header() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+  return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
@@ -39,27 +41,39 @@ export default function Header() {
       const el = document.querySelector(href);
       if (el) observer.observe(el);
     });
-    return () => observer.disconnect();
+  return () => observer.disconnect();
   }, []);
 
   const scrollTo = (href: string, label: string) => {
     clickedRef.current = true;
     setActive(label);
     setOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    navigateTo(href);
     setTimeout(() => { clickedRef.current = false; }, 1200);
   };
+
+  const menuButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setOpen(false); menuButton.current?.focus(); }
+    };
+    window.addEventListener('keydown', close);
+    const query = window.matchMedia('(min-width: 1024px)');
+    const resize = () => { if (query.matches) setOpen(false); };
+    query.addEventListener('change', resize);
+    return () => { window.removeEventListener('keydown', close); query.removeEventListener('change', resize); };
+  }, [open]);
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
+        scrolled || open
           ? 'bg-brand-dark/95 backdrop-blur-md shadow-[0_1px_0_0_rgba(255,255,255,0.06)]'
           : 'bg-transparent'
       }`}
     >
-      <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between h-[120px] py-2">
+      <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between h-[88px] lg:h-[104px] py-2 gap-5">
         {/* Logo */}
         <a
           href="#home"
@@ -69,16 +83,18 @@ export default function Header() {
           <img
             src={logoMain}
             alt="Universal Graphic Services"
-            className="h-[87px] w-auto object-contain"
+            className="w-[210px] sm:w-[250px] lg:w-[270px] h-auto max-w-full object-contain"
           />
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-9">
+        <nav aria-label="Main navigation" className="hidden lg:flex items-center gap-5 xl:gap-8">
           {navLinks.map((link) => (
-            <button
+            <a
+              href={link.href}
+              aria-current={active === link.label ? "location" : undefined}
               key={link.label}
-              onClick={() => scrollTo(link.href, link.label)}
+              onClick={(e) => { e.preventDefault(); scrollTo(link.href, link.label); }}
               className={`text-[13px] font-bold tracking-[0.18em] transition-colors duration-300 relative py-1 ${
                 active === link.label ? 'text-white' : 'text-gray-400 hover:text-white'
               }`}
@@ -89,7 +105,7 @@ export default function Header() {
                   active === link.label ? 'w-full' : 'w-0'
                 }`}
               />
-            </button>
+            </a>
           ))}
         </nav>
 
@@ -105,24 +121,26 @@ export default function Header() {
         </div>
 
         {/* Mobile hamburger */}
-        <button className="lg:hidden text-white p-2" onClick={() => setOpen(!open)}>
+        <button ref={menuButton} aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="mobile-navigation" className="lg:hidden text-white p-3 shrink-0" onClick={() => setOpen(!open)}>
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {open && (
-        <div className="lg:hidden bg-brand-dark border-t border-white/10">
+        <nav id="mobile-navigation" aria-label="Mobile navigation" className="lg:hidden bg-brand-dark border-t border-white/10 max-h-[calc(100dvh-88px)] overflow-auto">
           {navLinks.map((link) => (
-            <button
+            <a
+              href={link.href}
+              aria-current={active === link.label ? "location" : undefined}
               key={link.label}
-              onClick={() => scrollTo(link.href, link.label)}
+              onClick={(e) => { e.preventDefault(); scrollTo(link.href, link.label); }}
               className="block w-full text-left px-6 py-4 text-[14px] font-bold tracking-[0.18em] text-gray-300 hover:text-white hover:bg-white/5 border-b border-white/5"
             >
               {link.label}
-            </button>
+            </a>
           ))}
-        </div>
+        </nav>
       )}
     </header>
   );

@@ -23,8 +23,9 @@ function App() {
 
   return (
     <div className="bg-[#0a0a0a] font-sans antialiased">
+      <a className="skip-link" href="#main-content">Skip to content</a>
       <Header />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <Hero />
         <Categories />
         <WhyUs />
