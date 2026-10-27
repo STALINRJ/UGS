@@ -61,9 +61,9 @@ export default function ProductDetail({ productTitle, onClose }: Props) {
               </div>
             </div>
             <div className="order-2 lg:order-1 min-w-0">
-              <p className="text-brand-red text-xs font-bold tracking-[0.2em] mb-4">{product.cat}</p>
+              <p className="text-brand-red font-display text-[18px] uppercase mb-4">{product.cat}</p>
               <h2 id="product-title" className="font-display text-[40px] sm:text-[52px] leading-none mb-4">{product.title}</h2>
-              {product.condition && <span className={`inline-block text-xs font-bold px-3 py-2 mb-5 border ${product.condition === 'Brand New' ? 'text-emerald-300 border-emerald-600/40 bg-emerald-600/10' : 'text-amber-300 border-amber-600/40 bg-amber-600/10'}`}>{product.condition}</span>}
+              {product.condition && <span className="inline-block font-display text-[17px] leading-none uppercase px-3 py-2 mb-5 border text-gray-200 border-white/20 bg-white/5">{product.condition}</span>}
               <p className="text-gray-300 text-[15px] leading-relaxed mb-6">{product.description}</p>
               <button onClick={enquire} className="w-full sm:w-auto flex items-center justify-center gap-3 bg-brand-red hover:bg-[#c40510] px-6 py-4 text-xs font-bold tracking-widest mb-8">ENQUIRE ABOUT THIS PRODUCT <ArrowRight size={17} /></button>
               {product.specs.length > 0 && <h3 className="detail-heading">Specifications</h3>}

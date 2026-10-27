@@ -64,7 +64,7 @@ export default function Products() {
           ))}
         </div>
 
-        {active === 'CTP' && <div className="flex flex-wrap gap-3 mb-6" aria-label="CTP equipment groups">{['ALL', 'New CRON', 'Pre-owned equipment'].map(value => <button key={value} aria-pressed={group === value} onClick={() => setGroup(value)} className={`px-4 py-3 text-sm border ${group === value ? 'border-brand-red text-brand-red bg-white' : 'border-gray-300 text-gray-600'}`}>{value === 'ALL' ? 'All CTP equipment' : value}</button>)}</div>}
+        {active === 'CTP' && <div className="flex flex-wrap gap-3 mb-6" aria-label="CTP equipment groups">{['ALL', 'New CRON', 'Pre-owned equipment'].map(value => <button key={value} aria-pressed={group === value} onClick={() => setGroup(value)} className={`px-4 py-3 font-display text-[18px] leading-none uppercase border ${group === value ? 'border-brand-red text-brand-red bg-white' : 'border-gray-300 text-gray-600'}`}>{value === 'ALL' ? 'All CTP equipment' : value}</button>)}</div>}
 
         <p role="status" className="text-sm text-gray-600 mb-5">{filtered.length} products · {active === "ALL" ? "All categories" : active.toLowerCase()}</p>
 
@@ -83,16 +83,15 @@ export default function Products() {
                   className="w-full h-full object-contain p-5 pt-14 img-zoom"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <span className="absolute top-3 left-3 bg-brand-red text-white text-[11px] font-bold tracking-[0.18em] px-3 py-1.5">
+                <span className="absolute top-3 left-3 bg-brand-warm/95 border border-black/10 text-gray-700 font-display text-[17px] uppercase leading-none px-3 py-2">
                   {p.tag}
                 </span>
 
               </div>
               <div className="p-6">
-                <div className="text-gray-400 text-[12px] font-bold tracking-[0.2em] mb-2">{p.group || p.cat}</div>
-                <div className="flex items-center justify-between">
-                  <h3 className="font-display text-[#1a1a1a] text-[22px] leading-none tracking-wide">{p.title}</h3>
-                  <ArrowRight size={16} className="text-brand-red group-hover:translate-x-1 transition-transform duration-300" />
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="font-display text-[#1a1a1a] text-[22px] leading-[1.15] tracking-wide">{p.title}</h3>
+                  <ArrowRight size={16} className="text-brand-red shrink-0 mt-1 group-hover:translate-x-1 transition-transform duration-300" />
                 </div>
               </div>
             </button>
