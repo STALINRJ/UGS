@@ -48,7 +48,7 @@ export default function Products() {
           <div><p className="eyebrow mb-4">OUR PRODUCTS</p><h2 className="font-display text-brand-dark text-[48px] sm:text-[64px] lg:text-[72px] leading-none">EXPLORE OUR <span className="text-brand-red">RANGE</span></h2></div>
           <p className="text-[#555d68] text-[15px] max-w-[400px] leading-relaxed">Find equipment, supplies and replacement parts. Search by product name, model or part number.</p>
         </div>
-        <div ref={toolbar} className="catalogue-toolbar sticky top-[88px] lg:top-[104px] z-20 bg-brand-warm/95 backdrop-blur-md border-y border-black/20 py-3 sm:py-4 mb-6">
+        <div ref={toolbar} className="catalogue-toolbar sticky top-[80px] lg:top-[96px] z-20 bg-brand-warm/95 backdrop-blur-md border-y border-black/20 py-3 sm:py-4 mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center gap-3">
             <div className="relative flex-1 min-w-0">
               <Search size={18} className="absolute left-4 top-3.5 text-gray-600 pointer-events-none" />

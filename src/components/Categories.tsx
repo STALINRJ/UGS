@@ -97,7 +97,7 @@ export default function Categories() {
   );
 
   return (
-    <section className="bg-brand-warm" aria-label="Browse our solutions">
+    <section id="categories" className="bg-brand-warm" aria-label="Browse our solutions">
       <div ref={gridRef} className="max-w-[1400px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-[2px] bg-brand-warmgray">
           {tallCard(machines, 'md:col-start-1 md:row-start-1')}
