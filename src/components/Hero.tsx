@@ -1,82 +1,43 @@
+import { ArrowRight, Phone } from 'lucide-react';
+import { products } from '../data/products';
+import { business } from '../data/business';
 import { navigateTo } from '../utils/navigation';
-import { ArrowRight } from 'lucide-react';
-import { useReveal } from '../hooks/useReveal';
+import { browseCategory } from '../utils/enquiry';
 
-const stats = [
-  { num: '30+', sub: 'YEARS OF EXPERIENCE' },
-  { num: '5000+', sub: 'SATISFIED CUSTOMERS' },
-  { num: 'PAN INDIA', sub: 'SERVICE NETWORK' },
-  { num: '24/7', sub: 'TECHNICAL SUPPORT' },
+const scope = [
+  ['CTP', 'New & pre-owned equipment'], ['SPARES', 'Parts & components'],
+  ['CONSUMABLES', 'Pressroom supplies'], ['SERVICE', 'Installation & maintenance'],
 ];
 
 export default function Hero() {
-  const scrollTo = (href: string) => {
-    navigateTo(href);
-  };
-
-  const statsRef = useReveal<HTMLDivElement>();
-
   return (
-    <section id="home" className="relative min-h-screen flex flex-col bg-brand-dark overflow-hidden">
-      {/* Cinematic printing press image — machine dominates */}
-      <div className="absolute inset-0">
-        <img
-          src="https://images.pexels.com/photos/3862634/pexels-photo-3862634.jpeg?auto=compress&cs=tinysrgb&w=1920"
-          alt="Industrial printing press"
-          className="w-full h-full object-cover object-center"
-        />
-        {/* Controlled lighting — left dark for text, right reveals machine */}
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/85 to-brand-dark/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/20 to-transparent" />
-      </div>
-
-      {/* Hero content */}
-      <div className="relative flex-1 flex items-center pt-[88px] lg:pt-[104px]">
-        <div className="max-w-[1400px] mx-auto px-6 w-full py-20">
-          <div className="max-w-[680px]">
-            <div className="flex items-center gap-3 mb-8">
-              <span className="w-8 h-[1px] bg-brand-red" />
-              <span className="text-brand-red text-[11px] font-bold tracking-[0.32em] uppercase">
-                Offset Printing Machinery Experts
-              </span>
-            </div>
-
-            <h1 className="font-display text-white leading-[0.92] mb-8">
-              <span className="block text-[clamp(2.75rem,9vw,6.25rem)]">PRECISION IN</span>
-              <span className="block text-[clamp(2.75rem,9vw,6.25rem)]">EVERY</span>
-              <span className="block text-brand-red text-[clamp(3.15rem,11.3vw,9.25rem)] leading-[0.85]">
-                IMPRESSION
-              </span>
-            </h1>
-
-            <p className="text-gray-300 text-[16px] leading-[1.7] mb-12 max-w-[460px] font-medium">
-              Precision spare parts, CTP consumables, and expert installation and maintenance — engineered to keep your offset press running at peak performance.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-6">
-              <button
-                onClick={() => scrollTo('#products')}
-                className="flex items-center gap-2 bg-brand-red hover:bg-[#c40510] text-white text-[11px] font-bold tracking-[0.18em] uppercase px-8 py-4 transition-all duration-300 ease-engineered group"
-              >
-                EXPLORE SOLUTIONS
-                <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform duration-300" />
-              </button>
-            </div>
+    <section id="home" className="surface-dark bg-brand-dark pt-[88px] lg:pt-[104px] text-white">
+      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 items-center py-10 sm:py-14 lg:py-20">
+        <div>
+          <p className="eyebrow mb-6">OFFSET PRINTING & PREPRESS SOLUTIONS</p>
+          <h1 className="font-display leading-[0.94] mb-6 text-[clamp(3.1rem,7.2vw,6rem)]">
+            PRECISION IN<br />EVERY<br /><span className="text-brand-red text-[clamp(3.6rem,8.2vw,7rem)]">IMPRESSION</span>
+          </h1>
+          <p className="text-gray-300 text-base leading-relaxed max-w-[470px] mb-8">CTP equipment, processors, spare parts and consumables — with installation and maintenance support for your printing workflow.</p>
+          <div className="flex flex-wrap items-center gap-4">
+            <button onClick={() => navigateTo('#products')} className="primary-button">EXPLORE PRODUCTS <ArrowRight size={17} /></button>
+            <a href={business.phoneHref} className="inline-flex gap-2 items-center min-h-11 px-2 text-sm font-semibold hover:underline underline-offset-4"><Phone size={17} />Talk to our team</a>
+          </div>
+        </div>
+        <div className="border border-white/20">
+          <div className="flex justify-between gap-4 p-4 sm:px-6 border-b border-white/20 text-sm text-gray-300"><span>PREPRESS EQUIPMENT</span><span className="text-white">CRON CTP</span></div>
+          <div className="bg-brand-warm p-6 sm:p-9 aspect-[5/4] sm:aspect-[4/3] flex items-center justify-center">
+            <img src={products[1].img} alt="CRON H Series computer-to-plate equipment" fetchPriority="high" className="w-full h-full object-contain" />
+          </div>
+          <div className="flex items-center justify-between gap-4 p-4 sm:px-6">
+            <p className="text-gray-300 text-sm">Find equipment for your workflow.</p>
+            <button onClick={() => browseCategory('CTP')} aria-label="Browse CTP equipment" className="w-11 h-11 shrink-0 border border-white/40 grid place-items-center hover:bg-brand-red"><ArrowRight size={20} /></button>
           </div>
         </div>
       </div>
-
-      {/* Stats bar */}
-      <div ref={statsRef} className="relative bg-brand-charcoal border-t border-white/[0.06]">
-        <div className="max-w-[1400px] mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/[0.06]">
-            {stats.map(({ num, sub }) => (
-              <div key={sub} className="flex flex-col justify-center px-6 py-6">
-                <div className="font-display text-white text-[32px] leading-none mb-1.5">{num}</div>
-                <div className="text-gray-500 text-[12px] font-bold tracking-[0.18em]">{sub}</div>
-              </div>
-            ))}
-          </div>
+      <div className="border-t border-white/20 bg-brand-charcoal">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-2 lg:grid-cols-4 divide-x divide-white/15 px-5 sm:px-8">
+          {scope.map(([title, desc]) => <div key={title} className="py-5 sm:py-6 px-3 sm:px-5"><p className="font-display text-2xl mb-1">{title}</p><p className="text-sm text-gray-300 leading-relaxed">{desc}</p></div>)}
         </div>
       </div>
     </section>

@@ -1,81 +1,65 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Check, ArrowRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight, X, ZoomIn, ZoomOut } from 'lucide-react';
 import { products } from '../data/products';
-import { navigateTo } from '../utils/navigation';
+import { requestEnquiry } from '../utils/enquiry';
 
 interface Props { productTitle: string | null; onClose: () => void }
 
 export default function ProductDetail({ productTitle, onClose }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [zoomed, setZoomed] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const zoomClose = useRef<HTMLButtonElement>(null);
+  const imageButton = useRef<HTMLButtonElement>(null);
   const product = products.find(p => p.title === productTitle);
 
   useEffect(() => {
     const el = dialog.current;
     if (!el || !productTitle) return;
     const previousFocus = document.activeElement as HTMLElement | null;
-    setActiveIndex(0);
+    setActiveIndex(0); setZoomed(false); setZoom(1);
     el.showModal();
     const overflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    return () => {
-      el.close();
-      document.body.style.overflow = overflow;
-      previousFocus?.focus({ preventScroll: true });
-    };
+    return () => { el.close(); document.body.style.overflow = overflow; previousFocus?.focus({ preventScroll: true }); };
   }, [productTitle]);
 
+  useEffect(() => { if (zoomed) zoomClose.current?.focus(); }, [zoomed]);
   if (!product) return null;
   const move = (delta: number) => setActiveIndex(i => (i + delta + product.gallery.length) % product.gallery.length);
-  const enquire = () => {
-    window.dispatchEvent(new CustomEvent('prefill-contact', { detail: { category: 'Product Enquiry', product: product.title } }));
-    onClose();
-    requestAnimationFrame(() => {
-      navigateTo('#contact');
-      document.getElementById('contact-name')?.focus({ preventScroll: true });
-    });
-  };
+  const closeZoom = () => { setZoomed(false); setZoom(1); requestAnimationFrame(() => imageButton.current?.focus()); };
+  const enquire = () => { onClose(); requestAnimationFrame(() => requestEnquiry({ category: 'Product Enquiry', subject: product.title })); };
+  const facts = [{ label: 'Category', value: product.cat }, ...(product.condition ? [{ label: 'Condition', value: product.condition }] : []), ...(product.group ? [{ label: 'Range', value: product.group }] : []), ...product.specs];
 
   return (
-    <dialog ref={dialog} aria-labelledby="product-title" className="product-dialog bg-brand-dark text-white"
-      onCancel={e => { e.preventDefault(); onClose(); }}
-      onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="flex flex-col max-h-[inherit]">
-        <div className="flex items-center justify-between px-5 sm:px-8 py-3 border-b border-white/10 shrink-0">
-          <span className="text-gray-400 text-xs tracking-[0.18em] font-bold">PRODUCT DETAILS</span>
-          <button autoFocus onClick={onClose} aria-label="Close product details" className="w-11 h-11 grid place-items-center border border-white/20 hover:bg-brand-red hover:border-brand-red transition-colors"><X size={20} /></button>
-        </div>
-        <div className="overflow-y-auto overscroll-contain p-5 sm:p-8 lg:p-10">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-            <div className="order-1 lg:order-2 lg:sticky lg:top-0 min-w-0">
-              <div className="aspect-[4/3] bg-white border border-white/10 flex items-center justify-center overflow-hidden">
-                <img src={product.gallery[activeIndex]} alt={`${product.title} — view ${activeIndex + 1}`} className="w-full h-full object-contain" />
-              </div>
-              <div className="flex items-center justify-between mt-3 mb-4">
-                <button onClick={() => move(-1)} aria-label="Previous product image" className="w-11 h-11 border border-white/20 grid place-items-center hover:border-brand-red"><ChevronLeft size={20} /></button>
-                <span aria-live="polite" className="text-gray-300 text-sm">{activeIndex + 1} / {product.gallery.length}</span>
-                <button onClick={() => move(1)} aria-label="Next product image" className="w-11 h-11 border border-white/20 grid place-items-center hover:border-brand-red"><ChevronRight size={20} /></button>
-              </div>
-              <div className="flex gap-2 overflow-x-auto pb-2" aria-label="Product images">
-                {product.gallery.map((src, i) => <button key={src + i} onClick={() => setActiveIndex(i)} aria-label={`Show image ${i + 1} of ${product.title}`} aria-pressed={i === activeIndex} className={`w-16 h-16 sm:w-20 sm:h-20 shrink-0 border-2 ${i === activeIndex ? 'border-brand-red' : 'border-white/15 hover:border-white/50'}`}><img loading="lazy" src={src} alt="" className="w-full h-full object-cover" /></button>)}
-              </div>
+    <dialog ref={dialog} aria-labelledby={zoomed ? 'zoom-title' : 'product-title'} className="product-dialog surface-dark bg-brand-dark text-white" onCancel={e => { e.preventDefault(); if (zoomed) closeZoom(); else onClose(); }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      {zoomed ? <div className="flex flex-col h-[min(820px,90dvh)]">
+        <div className="flex flex-wrap gap-3 justify-between items-center p-4 border-b border-white/30 shrink-0"><h2 id="zoom-title" className="font-display text-2xl">{product.title} — PHOTO {activeIndex + 1}</h2><button ref={zoomClose} onClick={closeZoom} className="min-h-11 px-3 border border-white/50 flex gap-2 items-center"><X size={18} />Back to details</button></div>
+        <div className="flex items-center gap-3 p-3 shrink-0"><button aria-label="Zoom out" disabled={zoom === 1} onClick={() => setZoom(z => Math.max(1, z - 1))} className="w-11 h-11 border border-white/50 grid place-items-center disabled:opacity-40"><ZoomOut size={20} /></button><span aria-live="polite">{zoom * 100}%</span><button aria-label="Zoom in" disabled={zoom === 3} onClick={() => setZoom(z => Math.min(3, z + 1))} className="w-11 h-11 border border-white/50 grid place-items-center disabled:opacity-40"><ZoomIn size={20} /></button><span className="text-sm text-gray-300">Scroll to inspect when enlarged.</span></div>
+        <div className="overflow-auto flex-1 min-h-0 bg-white" tabIndex={0} aria-label="Enlarged product image"><div style={{ width: `${zoom * 100}%`, height: `${zoom * 100}%` }}><img src={product.gallery[activeIndex]} alt={`${product.title} — enlarged photo ${activeIndex + 1}`} className="w-full h-full object-contain max-w-none" /></div></div>
+      </div> : <div className="flex flex-col max-h-[inherit]">
+        <div className="flex items-start justify-between gap-4 px-5 sm:px-8 py-5 border-b border-white/25 shrink-0"><div><p className="eyebrow mb-2">{product.cat}</p><h2 id="product-title" className="font-display text-[32px] sm:text-[42px] leading-none">{product.title}</h2></div><button autoFocus onClick={onClose} aria-label="Close product details" className="w-11 h-11 shrink-0 grid place-items-center border border-white/40 hover:bg-brand-red"><X size={20} /></button></div>
+        <div className="overflow-y-auto overscroll-contain p-5 sm:p-8">
+          <div className="grid lg:grid-cols-2 gap-7 lg:gap-10 items-start">
+            <div className="lg:order-2 min-w-0">
+              <button ref={imageButton} aria-label={`Enlarge image of ${product.title}`} onClick={() => { setZoom(1); setZoomed(true); }} className="relative w-full aspect-[4/3] bg-white border border-white/25 overflow-hidden group"><img src={product.gallery[activeIndex]} alt={`${product.title} — photo ${activeIndex + 1}`} className="w-full h-full object-contain p-3" /><span className="absolute bottom-3 right-3 flex gap-2 items-center text-brand-dark bg-white border border-gray-400 px-3 py-2 text-sm font-semibold"><ZoomIn size={17} />Enlarge</span></button>
+              {product.gallery.length > 1 && <><div className="flex items-center justify-between my-3"><button onClick={() => move(-1)} aria-label="Previous product image" className="w-11 h-11 border border-white/40 grid place-items-center hover:border-white"><ChevronLeft size={20} /></button><span aria-live="polite" className="text-gray-200 text-sm">Photo {activeIndex + 1} of {product.gallery.length}</span><button onClick={() => move(1)} aria-label="Next product image" className="w-11 h-11 border border-white/40 grid place-items-center hover:border-white"><ChevronRight size={20} /></button></div><div className="flex gap-2 overflow-x-auto py-1" aria-label="Product images">{product.gallery.map((src, i) => <button key={src} onClick={() => setActiveIndex(i)} aria-label={`Show image ${i + 1} of ${product.title}`} aria-pressed={i === activeIndex} className={`w-16 h-16 shrink-0 border-2 bg-white ${i === activeIndex ? 'border-brand-red' : 'border-white/50'}`}><img loading="lazy" src={src} alt="" className="w-full h-full object-contain p-1" /></button>)}</div></>}
             </div>
-            <div className="order-2 lg:order-1 min-w-0">
-              <p className="text-brand-red font-display text-[18px] uppercase mb-4">{product.cat}</p>
-              <h2 id="product-title" className="font-display text-[40px] sm:text-[52px] leading-none mb-4">{product.title}</h2>
-              {product.condition && <span className="inline-block font-display text-[17px] leading-none uppercase px-3 py-2 mb-5 border text-gray-200 border-white/20 bg-white/5">{product.condition}</span>}
-              <p className="text-gray-300 text-[15px] leading-relaxed mb-6">{product.description}</p>
-              <button onClick={enquire} className="w-full sm:w-auto flex items-center justify-center gap-3 bg-brand-red hover:bg-[#c40510] px-6 py-4 text-xs font-bold tracking-widest mb-8">ENQUIRE ABOUT THIS PRODUCT <ArrowRight size={17} /></button>
-              {product.specs.length > 0 && <h3 className="detail-heading">Specifications</h3>}
-              {product.specs.length > 0 && <dl className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-white/10 border border-white/10 mb-8">{product.specs.map(s => <div key={s.label} className="bg-brand-charcoal p-4"><dt className="text-gray-400 text-xs mb-1">{s.label}</dt><dd className="text-white text-sm font-medium">{s.value}</dd></div>)}</dl>}
-              {product.features.length > 0 && <h3 className="detail-heading">Key features</h3>}
-              {product.features.length > 0 && <ul className="space-y-3 mb-8">{product.features.map(f => <li key={f} className="flex gap-3 text-gray-300 text-sm leading-relaxed"><Check size={17} className="text-brand-red shrink-0 mt-1" />{f}</li>)}</ul>}
-              {product.applications.length > 0 && <h3 className="detail-heading">Applications</h3>}
-              {product.applications.length > 0 && <ul className="flex flex-wrap gap-2">{product.applications.map(a => <li key={a} className="bg-white/5 border border-white/10 px-3 py-2 text-sm text-gray-300">{a}</li>)}</ul>}
+            <div className="lg:order-1 min-w-0">
+              <dl className="border-y border-white/25 mb-6">{facts.map(s => <div key={s.label} className="flex justify-between gap-5 py-3 border-b last:border-0 border-white/15 text-sm"><dt className="text-gray-300">{s.label}</dt><dd className="text-white font-semibold text-right">{s.value}</dd></div>)}</dl>
+              {product.specs.length > 0 && <p className="text-gray-200 leading-relaxed mb-5">{product.description}</p>}
+              <h3 className="font-display text-2xl mb-3">LET’S CONFIRM THE RIGHT FIT</h3>
+              <p className="text-gray-300 text-[15px] leading-relaxed mb-4">Contact our team for this item’s specifications, compatibility and current availability.</p>
+              <p className="text-gray-300 text-sm leading-relaxed mb-6">For a useful enquiry, include your machine model, part reference or required format, and your location.</p>
+              {product.features.length > 0 && <ul className="space-y-2 text-gray-200 mb-6">{product.features.map(f => <li key={f}>{f}</li>)}</ul>}
+              {product.applications.length > 0 && <p className="text-gray-200 mb-6">Applications: {product.applications.join(', ')}</p>}
+              <button onClick={enquire} className="primary-button hidden lg:inline-flex">ENQUIRE ABOUT THIS PRODUCT <ArrowRight size={17} /></button>
             </div>
           </div>
         </div>
-      </div>
+        <div className="lg:hidden p-4 border-t border-white/25 bg-brand-dark shrink-0"><button onClick={enquire} className="primary-button w-full">ENQUIRE ABOUT THIS PRODUCT <ArrowRight size={17} /></button></div>
+      </div>}
     </dialog>
   );
 }

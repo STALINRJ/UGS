@@ -73,17 +73,17 @@ export default function Header() {
           : 'bg-transparent'
       }`}
     >
-      <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between h-[88px] lg:h-[104px] py-2 gap-5">
+      <div className="max-w-[1400px] mx-auto px-5 sm:px-6 flex items-center justify-between h-[88px] lg:h-[104px] py-2 gap-5">
         {/* Logo */}
         <a
           href="#home"
           onClick={(e) => { e.preventDefault(); scrollTo('#home', 'HOME'); }}
-          className="flex items-center"
+          className="flex items-center bg-brand-warm px-2 py-1 shrink-0"
         >
           <img
             src={logoMain}
             alt="Universal Graphic Services"
-            className="w-[210px] sm:w-[250px] lg:w-[270px] h-auto max-w-full object-contain"
+            className="w-[190px] sm:w-[210px] lg:w-[240px] max-h-[76px] h-auto max-w-full object-contain"
           />
         </a>
 
@@ -95,7 +95,7 @@ export default function Header() {
               aria-current={active === link.label ? "location" : undefined}
               key={link.label}
               onClick={(e) => { e.preventDefault(); scrollTo(link.href, link.label); }}
-              className={`text-[13px] font-bold tracking-[0.18em] transition-colors duration-300 relative py-1 ${
+              className={`text-[13px] font-bold tracking-[0.1em] transition-colors duration-300 relative py-1 ${
                 active === link.label ? 'text-white' : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -113,7 +113,7 @@ export default function Header() {
         <div className="hidden lg:flex items-center">
           <button
             onClick={() => scrollTo('#contact', 'CONTACT')}
-            className="flex items-center gap-2 bg-brand-red hover:bg-[#c40510] text-white text-[13px] font-bold tracking-[0.18em] uppercase px-6 py-3 transition-all duration-300 group"
+            className="flex items-center gap-2 bg-brand-red hover:bg-[#c40510] text-white text-[13px] font-bold tracking-[0.1em] uppercase px-6 py-3 transition-all duration-300 group"
           >
             GET IN TOUCH
             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
