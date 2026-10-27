@@ -1,122 +1,30 @@
-import { Users, Package, Clock, Award, ArrowRight } from 'lucide-react';
-import { useReveal } from '../hooks/useReveal';
-
-const stats = [
-  { icon: Award, num: '30+', label: 'YEARS OF EXCELLENCE' },
-  { icon: Users, num: '5000+', label: 'HAPPY CUSTOMERS' },
-  { icon: Package, num: '50K+', label: 'PARTS DELIVERED' },
-  { icon: Clock, num: '24/7', label: 'SUPPORT AVAILABLE' },
-];
+import { ArrowRight, Check } from 'lucide-react';
+import { products } from '../data/products';
+import { requestEnquiry } from '../utils/enquiry';
 
 const values = [
-  { title: 'PRECISION', desc: 'Every part we supply meets exact OEM specifications for flawless press performance.' },
-  { title: 'RELIABILITY', desc: 'Decades of proven service keeping multi-million-rupee presses running.' },
-  { title: 'EXPERTISE', desc: 'Factory-trained technicians who understand offset press mechanics and electronics inside out.' },
+  ['THE RIGHT FIT', 'Share your machine model and part reference so our team can discuss compatibility.'],
+  ['A CONNECTED WORKFLOW', 'Explore CTP equipment, processors, consumables and replacement components in one place.'],
+  ['TECHNICAL SUPPORT', 'Discuss installation, maintenance and your printing-equipment requirements with our team.'],
 ];
 
 export default function WhyUs() {
-  const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const leftRef = useReveal<HTMLDivElement>();
-  const rightRef = useReveal<HTMLDivElement>();
-
   return (
-    <section id="about" className="bg-brand-warm py-24 px-6">
-      <div className="max-w-[1400px] mx-auto">
-        <div className="flex flex-col gap-6">
-          {/* Left card */}
-          <div ref={leftRef} className="bg-white p-10 lg:p-12 shadow-[0_2px_40px_-12px_rgba(0,0,0,0.08)]">
-            <div className="flex items-center gap-3 mb-5">
-              <span className="w-8 h-[1px] bg-brand-red" />
-              <span className="text-brand-red text-[11px] font-bold tracking-[0.3em] uppercase">
-                WHY PARTNER WITH US
-              </span>
-            </div>
-            <h2 className="font-display text-[#1a1a1a] text-[52px] md:text-[64px] leading-[0.95] mb-6">
-              BUILT ON TRUST.<br />
-              FOCUSED ON <span className="text-brand-red">YOU.</span>
-            </h2>
-            <p className="text-gray-500 text-[15px] leading-[1.7] mb-8 max-w-[420px]">
-              We go beyond supplying parts — we deliver complete solutions that maximize uptime, enhance productivity and reduce your operational costs.
-            </p>
-
-            {/* Values */}
-            <div className="space-y-5 mb-10">
-              {values.map((v) => (
-                <div key={v.title} className="flex gap-4">
-                  <div className="w-1 self-stretch bg-brand-red/20 mt-1" />
-                  <div>
-                    <div className="font-display text-[#1a1a1a] text-[18px] tracking-wide mb-1">{v.title}</div>
-                    <div className="text-gray-500 text-[13px] leading-[1.6]">{v.desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="text-gray-400 italic text-[13px] font-medium mb-1">— Team Universal Graphic Services</div>
-
-            {/* Stats grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-10">
-              {stats.map(({ icon: Icon, num, label }) => (
-                <div key={label} className="bg-brand-dark p-5 flex flex-col items-center text-center gap-2">
-                  <Icon size={18} className="text-brand-red" />
-                  <div className="font-display text-white text-[26px] leading-none">{num}</div>
-                  <div className="text-gray-400 text-[9px] font-bold tracking-[0.14em] leading-snug">{label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right card — Pan India */}
-          <div ref={rightRef} className="bg-brand-dark p-10 lg:p-12 relative overflow-hidden flex flex-col justify-between min-h-[400px]">
-            {/* Technical dot grid */}
-            <div className="absolute inset-0 opacity-[0.06]">
-              <svg viewBox="0 0 400 400" className="w-full h-full">
-                {Array.from({ length: 400 }).map((_, i) => (
-                  <circle
-                    key={i}
-                    cx={10 + (i % 20) * 19}
-                    cy={10 + Math.floor(i / 20) * 19}
-                    r="1"
-                    fill="#E30613"
-                  />
-                ))}
-              </svg>
-            </div>
-
-            {/* Large faded display text */}
-            <div className="absolute -bottom-4 -right-2 font-display text-white/[0.03] text-[160px] leading-none pointer-events-none select-none">
-              INDIA
-            </div>
-
-            <div className="relative">
-              <div className="flex items-center gap-3 mb-5">
-                <span className="w-8 h-[1px] bg-brand-red" />
-                <span className="text-brand-red text-[11px] font-bold tracking-[0.3em] uppercase">
-                  PAN INDIA SUPPORT
-                </span>
-              </div>
-              <h2 className="font-display text-white text-[48px] md:text-[58px] leading-[0.95] mb-5">
-                WHEREVER YOU ARE,<br />
-                WE ARE <span className="text-brand-red">THERE.</span>
-              </h2>
-              <p className="text-gray-400 text-[14px] leading-[1.7] max-w-[380px]">
-                Our nationwide service network ensures rapid response and minimal downtime — wherever your press operates.
-              </p>
-            </div>
-
-            <div className="relative flex items-center justify-between mt-8">
-              <button
-                onClick={() => scrollTo('#contact')}
-                className="flex items-center gap-2 border border-white/25 hover:border-white hover:bg-white hover:text-brand-dark text-white text-[11px] font-bold tracking-[0.18em] uppercase px-7 py-3.5 transition-all duration-300 ease-engineered group"
-              >
-                CONTACT OUR TEAM
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
-              </button>
-            </div>
+    <section id="about" className="bg-brand-warm section-space">
+      <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1.15fr_1fr] gap-6 items-start">
+        <div className="bg-white p-6 sm:p-10 lg:p-12 border border-black/10">
+          <p className="eyebrow mb-5">UNIVERSAL GRAPHIC SERVICES</p>
+          <h2 className="font-display text-[48px] sm:text-[60px] leading-none text-brand-dark mb-6">YOUR WORKFLOW.<br />OUR <span className="text-brand-red">FOCUS.</span></h2>
+          <p className="text-[#555d68] text-base leading-relaxed mb-8">Based in Bengaluru, we work with printing businesses on equipment, spare parts, consumables and service requirements.</p>
+          <div className="space-y-6">{values.map(([title, desc]) => <div key={title} className="flex gap-4"><Check size={19} className="text-brand-red shrink-0 mt-1" /><div><h3 className="font-display text-[22px] text-brand-dark mb-1">{title}</h3><p className="text-[#555d68] text-[15px] leading-relaxed">{desc}</p></div></div>)}</div>
+        </div>
+        <div className="surface-dark bg-brand-dark text-white border border-white/20">
+          <img src={products.find(p => p.title === 'Processor Drive Components')!.img} alt="Processor drive components and gears" loading="lazy" className="w-full h-52 sm:h-60 object-cover" />
+          <div className="p-6 sm:p-10">
+            <p className="eyebrow mb-4">LET’S DISCUSS YOUR REQUIREMENT</p>
+            <h3 className="font-display text-[36px] sm:text-[44px] leading-none mb-4">KEEP YOUR PRINT ROOM MOVING.</h3>
+            <p className="text-gray-300 text-[15px] leading-relaxed mb-6">A machine model, part number or clear photograph is a useful starting point. Tell us what you need and where the equipment is located.</p>
+            <button onClick={() => requestEnquiry({ category: 'General Enquiry', subject: 'Equipment and support requirements' })} className="primary-button">CONTACT OUR TEAM <ArrowRight size={17} /></button>
           </div>
         </div>
       </div>

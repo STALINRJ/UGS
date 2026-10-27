@@ -1,126 +1,23 @@
-import { Phone, Mail, MapPin, ArrowRight } from 'lucide-react';
-import { useReveal } from '../hooks/useReveal';
+import { Phone, Mail, MapPin, ArrowUpRight } from 'lucide-react';
+import { navigateTo } from '../utils/navigation';
+import { browseCategory, requestEnquiry } from '../utils/enquiry';
+import { business, addressSearch } from '../data/business';
 import logoMain from '../assets/logo_main.png';
 
-const brands = [
-  'Heidelberg', 'KOMORI', 'MAN Roland', 'Mitsubishi', 'Sakurai', 'Planeta', 'Goss', 'Akiyama',
-];
-
-const links = [
-  { label: 'Home', href: '#home' },
-  { label: 'About Us', href: '#about' },
-  { label: 'Products', href: '#products' },
-  { label: 'Services', href: '#services' },
-  { label: 'Contact', href: '#contact' },
-];
-
-const offerings = [
-  'Spare Parts',
-  'Consumables',
-  'Printing Machines',
-  'Installation & Commissioning',
-  'Maintenance & Repairs',
-  'Technical Support',
-];
+const links = [['Home', '#home'], ['About Us', '#about'], ['Products', '#products'], ['Services', '#services'], ['Contact', '#contact']];
+const catalogue = [['CTP Equipment', 'CTP'], ['Processors', 'PROCESSOR'], ['Spare Parts', 'SPARE PARTS'], ['Consumables', 'CONSUMABLES'], ['Software', 'SOFTWARE']];
 
 export default function Footer() {
-  const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const ref = useReveal<HTMLElement>();
-
   return (
-    <footer ref={ref} className="bg-[#070707] text-white">
-      {/* Brands strip */}
-      <div className="border-t border-b border-white/[0.06] py-12 px-6">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="text-center text-gray-500 text-[11px] font-bold tracking-[0.3em] uppercase mb-8">
-            Brands We Support
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-5">
-            {brands.map((b) => (
-              <span key={b} className="font-display text-gray-400 text-[22px] tracking-wide hover:text-white transition-colors duration-300 cursor-default">
-                {b}
-              </span>
-            ))}
-          </div>
+    <footer className="surface-dark bg-[#070707] text-white border-t border-white/25 section-space !py-12">
+      <div className="max-w-[1400px] mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-[1.1fr_0.65fr_0.8fr_1.2fr] gap-8 lg:gap-10">
+          <div><div className="inline-block bg-brand-warm px-3 py-2 mb-5"><img src={logoMain} alt={business.name} className="w-[230px] max-w-full h-auto" /></div><p className="text-gray-300 text-sm leading-relaxed max-w-[320px]">Equipment, spare parts, consumables and technical support for printing and prepress workflows.</p><p className="text-gray-300 text-sm leading-relaxed mt-4">Share your machine’s make and model so we can discuss the right parts and support.</p></div>
+          <div><h3 className="font-display text-2xl mb-4">QUICK LINKS</h3><ul>{links.map(([label,href]) => <li key={href}><a href={href} onClick={e => { e.preventDefault(); navigateTo(href); }} className="inline-flex min-h-11 items-center text-gray-300 hover:text-white text-sm underline-offset-4 hover:underline">{label}</a></li>)}</ul></div>
+          <div><h3 className="font-display text-2xl mb-4">OUR OFFERINGS</h3><ul>{catalogue.map(([label,category]) => <li key={category}><a href="#products" onClick={e => { e.preventDefault(); browseCategory(category); }} className="inline-flex min-h-11 items-center text-gray-300 hover:text-white text-sm hover:underline underline-offset-4">{label}</a></li>)}<li><a href="#contact" onClick={e => { e.preventDefault(); requestEnquiry({ category: 'Machine Service', subject: 'Installation and maintenance support' }); }} className="inline-flex min-h-11 items-center text-gray-300 hover:text-white text-sm hover:underline underline-offset-4">Installation & maintenance</a></li></ul></div>
+          <div><h3 className="font-display text-2xl mb-4">CONTACT</h3><div className="space-y-3 text-gray-200 text-sm leading-relaxed"><div className="flex gap-3"><MapPin size={18} className="text-[#ff737c] shrink-0 mt-1" /><address className="not-italic">{business.address.map(line => <span className="block" key={line}>{line}</span>)}<a href={addressSearch} target="_blank" rel="noopener noreferrer" className="inline-flex gap-2 items-center min-h-11 underline underline-offset-4">Find this address <ArrowUpRight size={15} /></a></address></div><a href={business.phoneHref} className="flex items-center gap-3 min-h-11 hover:underline underline-offset-4"><Phone size={18} className="text-[#ff737c] shrink-0" />{business.phone}</a><a href={`mailto:${business.email}`} className="flex items-center gap-3 min-h-11 hover:underline underline-offset-4"><Mail size={18} className="text-[#ff737c] shrink-0" /><span className="break-all">{business.email}</span></a></div></div>
         </div>
-      </div>
-
-      {/* Main footer */}
-      <div className="max-w-[1400px] mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
-          {/* Brand — prominent logo */}
-          <div className="md:col-span-4">
-            <div className="mb-6">
-              <img src={logoMain} alt="Universal Graphic Services" className="h-20 w-auto object-contain" />
-            </div>
-            <p className="text-gray-500 text-[13px] leading-[1.7] max-w-[320px]">
-              Your trusted partner for offset printing machine spare parts, consumables, machines and expert service solutions across India.
-            </p>
-          </div>
-
-          {/* Links */}
-          <div className="md:col-span-2">
-            <h4 className="font-display text-white text-[16px] tracking-wide mb-6">Quick Links</h4>
-            <ul className="space-y-3.5">
-              {links.map((l) => (
-                <li key={l.label}>
-                  <button
-                    onClick={() => scrollTo(l.href)}
-                    className="text-gray-500 hover:text-white text-[13px] transition-colors duration-300 flex items-center gap-2 group"
-                  >
-                    <ArrowRight size={12} className="text-brand-red opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    {l.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Offerings */}
-          <div className="md:col-span-3">
-            <h4 className="font-display text-white text-[16px] tracking-wide mb-6">Our Offerings</h4>
-            <ul className="space-y-3.5 text-gray-500 text-[13px]">
-              {offerings.map((o) => (
-                <li key={o} className="hover:text-white transition-colors duration-300 cursor-default">{o}</li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div className="md:col-span-3">
-            <h4 className="font-display text-white text-[16px] tracking-wide mb-6">Contact</h4>
-            <ul className="space-y-4 text-gray-500 text-[13px]">
-              <li className="flex items-start gap-3">
-                <MapPin size={15} className="text-brand-red mt-0.5 shrink-0" />
-                <span>RR Nagar, Bangalore</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone size={15} className="text-brand-red shrink-0" />
-                <a href="tel:+919741101035" className="hover:text-white transition-colors duration-300">+91 97411 01035</a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail size={15} className="text-brand-red shrink-0" />
-                <a href="mailto:info@universalgraphicservices.com" className="hover:text-white transition-colors duration-300 break-all">info@universalgraphicservices.com</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div className="border-t border-white/[0.06] py-6 px-6">
-        <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-gray-600 text-[12px]">
-            © {new Date().getFullYear()} Universal Graphic Services. All rights reserved.
-          </p>
-          <p className="text-gray-600 text-[12px] tracking-wide">
-            Engineered for the offset printing industry.
-          </p>
-        </div>
+        <div className="border-t border-white/25 mt-10 pt-6 flex flex-col sm:flex-row sm:justify-between gap-3 text-gray-300 text-sm"><p>© {new Date().getFullYear()} {business.name}.</p><p>Printing & prepress solutions.</p></div>
       </div>
     </footer>
   );

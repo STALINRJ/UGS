@@ -1,88 +1,19 @@
 import { Settings, Wrench, Truck, Headphones, ArrowRight } from 'lucide-react';
-import { useReveal, useStaggerReveal } from '../hooks/useReveal';
+import { requestEnquiry } from '../utils/enquiry';
 
 const services = [
-  {
-    icon: Settings,
-    title: 'INSTALLATION & COMMISSIONING',
-    desc: 'Professional setup and commissioning of offset presses, ensuring optimal performance from day one.',
-    num: '01',
-  },
-  {
-    icon: Wrench,
-    title: 'MAINTENANCE & REPAIRS',
-    desc: 'Scheduled maintenance and rapid repair services to minimize downtime and extend machine life.',
-    num: '02',
-  },
-  {
-    icon: Truck,
-    title: 'SPARES SUPPLY',
-    desc: 'Genuine OEM and compatible spare parts delivered promptly to keep your operations running.',
-    num: '03',
-  },
-  {
-    icon: Headphones,
-    title: 'TECHNICAL SUPPORT',
-    desc: 'Expert guidance on machine upgrades, process optimization and consumable selection.',
-    num: '04',
-  },
+  { icon: Settings, title: 'INSTALLATION & COMMISSIONING', desc: 'Discuss setup and commissioning requirements for your printing equipment.', category: 'Machine Installation', num: '01' },
+  { icon: Wrench, title: 'MAINTENANCE & REPAIRS', desc: 'Tell us about the machine, symptoms and maintenance work you need.', category: 'Maintenance & Repairs', num: '02' },
+  { icon: Truck, title: 'SPARES SUPPLY', desc: 'Share a part reference or photograph to discuss a suitable replacement.', category: 'Spare Parts', num: '03' },
+  { icon: Headphones, title: 'TECHNICAL SUPPORT', desc: 'Talk through equipment issues, upgrades and prepress workflow requirements.', category: 'Technical Support', num: '04' },
 ];
 
 export default function Services() {
-  const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const leftRef = useReveal<HTMLDivElement>();
-  const gridRef = useStaggerReveal<HTMLDivElement>();
-
   return (
-    <section id="services" className="bg-brand-dark py-24 px-6">
-      <div className="max-w-[1400px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Left intro */}
-          <div ref={leftRef} className="lg:col-span-4">
-            <div className="flex items-center gap-3 mb-5">
-              <span className="w-8 h-[1px] bg-brand-red" />
-              <span className="text-brand-red text-[11px] font-bold tracking-[0.3em] uppercase">
-                WHAT WE OFFER
-              </span>
-            </div>
-            <h2 className="font-display text-white text-[56px] md:text-[68px] leading-[0.95] mb-6">
-              COMPLETE<br />SERVICE<br /><span className="text-brand-red">SOLUTIONS.</span>
-            </h2>
-            <p className="text-gray-400 text-[15px] leading-[1.7] mb-8 max-w-[340px]">
-              From installation to lifetime support, we cover every aspect of your printing operation with expertise and care.
-            </p>
-            <button
-              onClick={() => scrollTo('#contact')}
-              className="flex items-center gap-2 bg-brand-red hover:bg-[#c40510] text-white text-[11px] font-bold tracking-[0.18em] uppercase px-7 py-4 transition-all duration-300 ease-engineered group"
-            >
-              REQUEST A SERVICE
-              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
-            </button>
-          </div>
-
-          {/* Right grid */}
-          <div ref={gridRef} className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-[1px] bg-white/[0.06]">
-            {services.map(({ icon: Icon, title, desc, num }) => (
-              <div
-                key={num}
-                className="bg-brand-dark p-8 lg:p-10 group hover:bg-brand-charcoal transition-colors duration-500 ease-engineered relative"
-              >
-                <div className="flex items-start justify-between mb-8">
-                  <div className="w-12 h-12 border border-brand-red/30 flex items-center justify-center group-hover:bg-brand-red group-hover:border-brand-red transition-all duration-300 ease-engineered">
-                    <Icon size={22} className="text-brand-red group-hover:text-white transition-colors duration-300" />
-                  </div>
-                  <span className="font-display text-white/[0.06] text-[56px] leading-none">{num}</span>
-                </div>
-                <h3 className="font-display text-white text-[24px] tracking-wide mb-3 leading-tight">{title}</h3>
-                <p className="text-gray-500 text-[13px] leading-[1.7]">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+    <section id="services" className="surface-dark bg-brand-dark section-space text-white">
+      <div className="max-w-[1400px] mx-auto grid lg:grid-cols-12 gap-8 lg:gap-12">
+        <div className="lg:col-span-4"><p className="eyebrow mb-5">WHAT WE OFFER</p><h2 className="font-display text-[48px] sm:text-[64px] leading-none mb-6">COMPLETE<br />SERVICE<br /><span className="text-brand-red">SOLUTIONS.</span></h2><p className="text-gray-300 text-base leading-relaxed mb-7 max-w-[380px]">Choose the support you need. We’ll carry your service selection into the enquiry so you don’t have to explain it twice.</p><button onClick={() => requestEnquiry({ category: 'Machine Service', subject: 'Machine service requirements' })} className="primary-button">REQUEST A SERVICE <ArrowRight size={17} /></button></div>
+        <div className="lg:col-span-8 grid sm:grid-cols-2 gap-px border border-white/25 bg-white/25">{services.map(({ icon: Icon, title, desc, category, num }) => <div key={num} className="bg-brand-charcoal p-6 sm:p-8 flex flex-col"><div className="flex items-center justify-between mb-6"><Icon size={27} className="text-[#ff737c]" /><span className="font-display text-gray-400 text-3xl">{num}</span></div><h3 className="font-display text-2xl leading-tight mb-3">{title}</h3><p className="text-gray-300 text-[15px] leading-relaxed mb-5">{desc}</p><button aria-label={`Enquire about ${title.toLowerCase()}`} onClick={() => requestEnquiry({ category, subject: title })} className="mt-auto inline-flex justify-between items-center gap-4 text-sm font-bold min-h-11 hover:underline underline-offset-4">ENQUIRE ABOUT THIS SERVICE <ArrowRight size={17} className="shrink-0" /></button></div>)}</div>
       </div>
     </section>
   );
