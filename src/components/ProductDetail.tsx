@@ -48,7 +48,7 @@ export default function ProductDetail({ productTitle, onClose }: Props) {
         <div className="overflow-y-auto overscroll-contain p-5 sm:p-8 lg:p-10">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
             <div className="order-1 lg:order-2 lg:sticky lg:top-0 min-w-0">
-              <div className="aspect-[4/3] bg-brand-charcoal border border-white/10 flex items-center justify-center overflow-hidden">
+              <div className="aspect-[4/3] bg-white border border-white/10 flex items-center justify-center overflow-hidden">
                 <img src={product.gallery[activeIndex]} alt={`${product.title} — view ${activeIndex + 1}`} className="w-full h-full object-contain" />
               </div>
               <div className="flex items-center justify-between mt-3 mb-4">
@@ -66,12 +66,12 @@ export default function ProductDetail({ productTitle, onClose }: Props) {
               {product.condition && <span className={`inline-block text-xs font-bold px-3 py-2 mb-5 border ${product.condition === 'Brand New' ? 'text-emerald-300 border-emerald-600/40 bg-emerald-600/10' : 'text-amber-300 border-amber-600/40 bg-amber-600/10'}`}>{product.condition}</span>}
               <p className="text-gray-300 text-[15px] leading-relaxed mb-6">{product.description}</p>
               <button onClick={enquire} className="w-full sm:w-auto flex items-center justify-center gap-3 bg-brand-red hover:bg-[#c40510] px-6 py-4 text-xs font-bold tracking-widest mb-8">ENQUIRE ABOUT THIS PRODUCT <ArrowRight size={17} /></button>
-              <h3 className="detail-heading">Specifications</h3>
-              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-white/10 border border-white/10 mb-8">{product.specs.map(s => <div key={s.label} className="bg-brand-charcoal p-4"><dt className="text-gray-400 text-xs mb-1">{s.label}</dt><dd className="text-white text-sm font-medium">{s.value}</dd></div>)}</dl>
-              <h3 className="detail-heading">Key features</h3>
-              <ul className="space-y-3 mb-8">{product.features.map(f => <li key={f} className="flex gap-3 text-gray-300 text-sm leading-relaxed"><Check size={17} className="text-brand-red shrink-0 mt-1" />{f}</li>)}</ul>
-              <h3 className="detail-heading">Applications</h3>
-              <ul className="flex flex-wrap gap-2">{product.applications.map(a => <li key={a} className="bg-white/5 border border-white/10 px-3 py-2 text-sm text-gray-300">{a}</li>)}</ul>
+              {product.specs.length > 0 && <h3 className="detail-heading">Specifications</h3>}
+              {product.specs.length > 0 && <dl className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-white/10 border border-white/10 mb-8">{product.specs.map(s => <div key={s.label} className="bg-brand-charcoal p-4"><dt className="text-gray-400 text-xs mb-1">{s.label}</dt><dd className="text-white text-sm font-medium">{s.value}</dd></div>)}</dl>}
+              {product.features.length > 0 && <h3 className="detail-heading">Key features</h3>}
+              {product.features.length > 0 && <ul className="space-y-3 mb-8">{product.features.map(f => <li key={f} className="flex gap-3 text-gray-300 text-sm leading-relaxed"><Check size={17} className="text-brand-red shrink-0 mt-1" />{f}</li>)}</ul>}
+              {product.applications.length > 0 && <h3 className="detail-heading">Applications</h3>}
+              {product.applications.length > 0 && <ul className="flex flex-wrap gap-2">{product.applications.map(a => <li key={a} className="bg-white/5 border border-white/10 px-3 py-2 text-sm text-gray-300">{a}</li>)}</ul>}
             </div>
           </div>
         </div>

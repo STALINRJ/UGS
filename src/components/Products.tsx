@@ -5,7 +5,8 @@ import { products, categories, type Product } from '../data/products';
 
 export default function Products() {
   const [active, setActive] = useState('ALL');
-  const filtered = active === 'ALL' ? products : products.filter((p) => p.cat === active);
+  const [group, setGroup] = useState('ALL');
+  const filtered = active === 'ALL' ? products : products.filter((p) => p.cat === active && (group === 'ALL' || p.group === group));
   const headerRef = useReveal<HTMLDivElement>();
   const gridRef = useStaggerReveal<HTMLDivElement>();
   const sectionRef = useRef<HTMLElement>(null);
@@ -14,6 +15,7 @@ export default function Products() {
     const handler = (e: Event) => {
       const filter = (e as CustomEvent<string>).detail;
       setActive(filter);
+      setGroup('ALL');
     };
     window.addEventListener('set-product-filter', handler);
     return () => window.removeEventListener('set-product-filter', handler);
@@ -50,7 +52,7 @@ export default function Products() {
             <button
               key={cat}
               aria-pressed={active === cat}
-              onClick={() => setActive(cat)}
+              onClick={() => { setActive(cat); setGroup('ALL'); }}
               className={`text-[11px] font-bold tracking-[0.18em] uppercase px-6 py-3 border transition-all duration-300 ease-engineered ${
                 active === cat
                   ? 'bg-brand-dark text-white border-brand-dark'
@@ -61,6 +63,8 @@ export default function Products() {
             </button>
           ))}
         </div>
+
+        {active === 'CTP' && <div className="flex flex-wrap gap-3 mb-6" aria-label="CTP equipment groups">{['ALL', 'New CRON', 'Pre-owned equipment'].map(value => <button key={value} aria-pressed={group === value} onClick={() => setGroup(value)} className={`px-4 py-3 text-sm border ${group === value ? 'border-brand-red text-brand-red bg-white' : 'border-gray-300 text-gray-600'}`}>{value === 'ALL' ? 'All CTP equipment' : value}</button>)}</div>}
 
         <p role="status" className="text-sm text-gray-600 mb-5">{filtered.length} products · {active === "ALL" ? "All categories" : active.toLowerCase()}</p>
 
@@ -76,26 +80,16 @@ export default function Products() {
                 <img
                   loading="lazy" decoding="async" src={p.img}
                   alt={p.title}
-                  className="w-full h-full object-cover img-zoom"
+                  className="w-full h-full object-contain p-5 pt-14 img-zoom"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <span className="absolute top-3 left-3 bg-brand-red text-white text-[11px] font-bold tracking-[0.18em] px-3 py-1.5">
                   {p.tag}
                 </span>
-                {p.condition && (
-                  <span
-                    className={`absolute top-3 right-3 text-white text-[11px] font-bold tracking-[0.15em] px-3 py-1.5 ${
-                      p.condition === 'Brand New'
-                        ? 'bg-emerald-600'
-                        : 'bg-amber-600'
-                    }`}
-                  >
-                    {p.condition.toUpperCase()}
-                  </span>
-                )}
+
               </div>
               <div className="p-6">
-                <div className="text-gray-400 text-[12px] font-bold tracking-[0.2em] mb-2">{p.cat}</div>
+                <div className="text-gray-400 text-[12px] font-bold tracking-[0.2em] mb-2">{p.group || p.cat}</div>
                 <div className="flex items-center justify-between">
                   <h3 className="font-display text-[#1a1a1a] text-[22px] leading-none tracking-wide">{p.title}</h3>
                   <ArrowRight size={16} className="text-brand-red group-hover:translate-x-1 transition-transform duration-300" />

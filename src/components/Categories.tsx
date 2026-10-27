@@ -1,3 +1,4 @@
+import { products } from '../data/products';
 import { navigateTo } from '../utils/navigation';
 import { ArrowRight } from 'lucide-react';
 import { useReveal } from '../hooks/useReveal';
@@ -5,17 +6,17 @@ import { useReveal } from '../hooks/useReveal';
 const cats = [
   {
     num: '01',
-    title: 'MACHINES',
-    desc: 'Pre-owned and refurbished offset presses, inspected and certified for maximum uptime and output quality.',
-    img: 'https://images.pexels.com/photos/9550363/pexels-photo-9550363.jpeg?auto=compress&cs=tinysrgb&w=1000',
+    title: 'CTP',
+    desc: 'New and pre-owned CTP equipment for your prepress workflow.',
+    img: products[1].img,
     href: '#products',
-    filter: 'MACHINES',
+    filter: 'CTP',
   },
   {
     num: '02',
     title: 'SPARE PARTS',
     desc: 'Genuine OEM & compatible parts sourced for all major offset presses.',
-    img: 'https://images.pexels.com/photos/7568428/pexels-photo-7568428.jpeg?auto=compress&cs=tinysrgb&w=800',
+    img: products[16].img,
     href: '#products',
     filter: 'SPARE PARTS',
   },
@@ -23,7 +24,7 @@ const cats = [
     num: '03',
     title: 'CONSUMABLES',
     desc: 'High-performance inks, CTP plates, blankets and fountain solutions.',
-    img: 'https://images.pexels.com/photos/19316517/pexels-photo-19316517.png?auto=compress&cs=tinysrgb&w=800',
+    img: products[0].img,
     href: '#products',
     filter: 'CONSUMABLES',
   },
@@ -59,7 +60,7 @@ export default function Categories() {
       <img
         loading="lazy" decoding="async" src={cat.img}
         alt={cat.title}
-        className="absolute inset-0 w-full h-full object-cover img-zoom"
+        className={`absolute inset-0 w-full h-full ${cat.filter ? "object-contain p-6 bg-white" : "object-cover"} img-zoom`}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent" />
       <div className="relative h-full flex flex-col justify-end p-7 min-h-[300px]">
@@ -81,7 +82,7 @@ export default function Categories() {
       <img
         loading="lazy" decoding="async" src={cat.img}
         alt={cat.title}
-        className="absolute inset-0 w-full h-full object-cover img-zoom"
+        className={`absolute inset-0 w-full h-full ${cat.filter ? "object-contain p-6 bg-white" : "object-cover"} img-zoom`}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent" />
       <div className="relative h-full flex flex-col justify-end p-6 min-h-[180px]">
