@@ -1,3 +1,4 @@
+import { navigateTo } from '../utils/navigation';
 import { ArrowRight } from 'lucide-react';
 import { useReveal } from '../hooks/useReveal';
 
@@ -41,8 +42,7 @@ export default function Categories() {
     if (filter) {
       window.dispatchEvent(new CustomEvent('set-product-filter', { detail: filter }));
     }
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    navigateTo(href);
   };
 
   const machines = cats[0];
@@ -52,12 +52,12 @@ export default function Categories() {
   const gridRef = useReveal<HTMLDivElement>();
 
   const tallCard = (cat: typeof cats[0]) => (
-    <div
+    <a href={cat.href}
       className="relative overflow-hidden cursor-pointer group min-h-[300px] md:row-span-2 bg-brand-dark"
-      onClick={() => navigate(cat.href, cat.filter)}
+      onClick={(e) => { e.preventDefault(); navigate(cat.href, cat.filter); }}
     >
       <img
-        src={cat.img}
+        loading="lazy" decoding="async" src={cat.img}
         alt={cat.title}
         className="absolute inset-0 w-full h-full object-cover img-zoom"
       />
@@ -70,16 +70,16 @@ export default function Categories() {
           EXPLORE <ArrowRight size={14} />
         </div>
       </div>
-    </div>
+    </a>
   );
 
   const smallCard = (cat: typeof cats[0]) => (
-    <div
+    <a href={cat.href}
       className="relative overflow-hidden cursor-pointer group min-h-[180px] bg-brand-dark"
-      onClick={() => navigate(cat.href, cat.filter)}
+      onClick={(e) => { e.preventDefault(); navigate(cat.href, cat.filter); }}
     >
       <img
-        src={cat.img}
+        loading="lazy" decoding="async" src={cat.img}
         alt={cat.title}
         className="absolute inset-0 w-full h-full object-cover img-zoom"
       />
@@ -92,7 +92,7 @@ export default function Categories() {
           EXPLORE <ArrowRight size={13} />
         </div>
       </div>
-    </div>
+    </a>
   );
 
   return (

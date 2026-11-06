@@ -1,3 +1,4 @@
+import { navigateTo } from '../utils/navigation';
 import { Phone, Mail, MapPin, ArrowRight } from 'lucide-react';
 import { useReveal } from '../hooks/useReveal';
 import logoMain from '../assets/logo_main.png';
@@ -25,8 +26,7 @@ const offerings = [
 
 export default function Footer() {
   const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    navigateTo(href);
   };
 
   const ref = useReveal<HTMLElement>();
@@ -55,7 +55,7 @@ export default function Footer() {
           {/* Brand — prominent logo */}
           <div className="md:col-span-4">
             <div className="mb-6">
-              <img src={logoMain} alt="Universal Graphic Services" className="h-20 w-auto object-contain" />
+              <img src={logoMain} alt="Universal Graphic Services" className="w-[250px] max-w-full h-auto object-contain" />
             </div>
             <p className="text-gray-500 text-[13px] leading-[1.7] max-w-[320px]">
               Your trusted partner for offset printing machine spare parts, consumables, machines and expert service solutions across India.
@@ -68,13 +68,13 @@ export default function Footer() {
             <ul className="space-y-3.5">
               {links.map((l) => (
                 <li key={l.label}>
-                  <button
-                    onClick={() => scrollTo(l.href)}
+                  <a href={l.href}
+                    onClick={(e) => { e.preventDefault(); scrollTo(l.href); }}
                     className="text-gray-500 hover:text-white text-[13px] transition-colors duration-300 flex items-center gap-2 group"
                   >
                     <ArrowRight size={12} className="text-brand-red opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     {l.label}
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>

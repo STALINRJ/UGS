@@ -1,3 +1,4 @@
+import { navigateTo } from '../utils/navigation';
 import { Users, Package, Clock, Award, ArrowRight } from 'lucide-react';
 import { useReveal } from '../hooks/useReveal';
 
@@ -16,19 +17,18 @@ const values = [
 
 export default function WhyUs() {
   const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    navigateTo(href);
   };
 
   const leftRef = useReveal<HTMLDivElement>();
   const rightRef = useReveal<HTMLDivElement>();
 
   return (
-    <section id="about" className="bg-brand-warm py-24 px-6">
+    <section id="about" className="bg-brand-warm py-16 md:py-24 px-5 sm:px-8">
       <div className="max-w-[1400px] mx-auto">
-        <div className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_1fr] gap-6 items-stretch">
           {/* Left card */}
-          <div ref={leftRef} className="bg-white p-10 lg:p-12 shadow-[0_2px_40px_-12px_rgba(0,0,0,0.08)]">
+          <div ref={leftRef} className="bg-white p-6 sm:p-10 lg:p-12 shadow-[0_2px_40px_-12px_rgba(0,0,0,0.08)]">
             <div className="flex items-center gap-3 mb-5">
               <span className="w-8 h-[1px] bg-brand-red" />
               <span className="text-brand-red text-[11px] font-bold tracking-[0.3em] uppercase">
@@ -50,7 +50,7 @@ export default function WhyUs() {
                   <div className="w-1 self-stretch bg-brand-red/20 mt-1" />
                   <div>
                     <div className="font-display text-[#1a1a1a] text-[18px] tracking-wide mb-1">{v.title}</div>
-                    <div className="text-gray-500 text-[13px] leading-[1.6]">{v.desc}</div>
+                    <div className="text-gray-500 text-[14px] leading-[1.6]">{v.desc}</div>
                   </div>
                 </div>
               ))}
@@ -59,19 +59,19 @@ export default function WhyUs() {
             <div className="text-gray-400 italic text-[13px] font-medium mb-1">— Team Universal Graphic Services</div>
 
             {/* Stats grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-10">
+            <div className="grid grid-cols-2 gap-3 mt-10">
               {stats.map(({ icon: Icon, num, label }) => (
                 <div key={label} className="bg-brand-dark p-5 flex flex-col items-center text-center gap-2">
                   <Icon size={18} className="text-brand-red" />
                   <div className="font-display text-white text-[26px] leading-none">{num}</div>
-                  <div className="text-gray-400 text-[9px] font-bold tracking-[0.14em] leading-snug">{label}</div>
+                  <div className="text-gray-400 text-[11px] font-bold tracking-[0.14em] leading-snug">{label}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Right card — Pan India */}
-          <div ref={rightRef} className="bg-brand-dark p-10 lg:p-12 relative overflow-hidden flex flex-col justify-between min-h-[400px]">
+          <div ref={rightRef} className="bg-brand-dark p-6 sm:p-10 lg:p-12 relative overflow-hidden flex flex-col justify-between min-h-[400px]">
             {/* Technical dot grid */}
             <div className="absolute inset-0 opacity-[0.06]">
               <svg viewBox="0 0 400 400" className="w-full h-full">

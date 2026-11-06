@@ -71,3 +71,24 @@
     transform: translateY(-6px);
   }
 }
+
+/* Shared interaction and responsive foundations. */
+html { scroll-padding-top: 104px; }
+body { min-width: 320px; }
+button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
+:where(a, button, input, select, textarea):focus-visible { outline: 2px solid #E30613; outline-offset: 4px; }
+.skip-link { position: fixed; top: 12px; left: 12px; z-index: 200; padding: 12px 20px; background: white; color: #0D0D0D; transform: translateY(-200%); }
+.skip-link:focus { transform: translateY(0); }
+.product-dialog { width: min(1240px, calc(100% - 48px)); max-width: none; max-height: calc(100dvh - 48px); padding: 0; margin: auto; border: 1px solid rgb(255 255 255 / .12); box-shadow: 0 24px 100px #0008; }
+.product-dialog::backdrop { background: rgb(0 0 0 / .78); backdrop-filter: blur(6px); }
+.detail-heading { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; margin-bottom: 16px; }
+@media (max-width: 639px) {
+  html { scroll-padding-top: 88px; }
+  .product-dialog { width: 100%; max-height: 100dvh; height: 100dvh; border: 0; }
+  .product-dialog > div { height: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .reveal, .stagger > * { opacity: 1 !important; transform: none !important; }
+}

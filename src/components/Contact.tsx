@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, ChevronDown, Check } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { MapPin, Phone, Mail, Clock, Send, ChevronDown } from 'lucide-react';
 import { useReveal } from '../hooks/useReveal';
 
 const contactInfo = [
   { icon: MapPin, label: 'VISIT US', value: 'RR Nagar, Bangalore' },
-  { icon: Phone, label: 'CALL US', value: '+91 97411 01035' },
-  { icon: Mail, label: 'EMAIL US', value: 'info@universalgraphicservices.com' },
+  { icon: Phone, label: 'CALL US', value: '+91 97411 01035', href: 'tel:+919741101035' },
+  { icon: Mail, label: 'EMAIL US', value: 'info@universalgraphicservices.com', href: 'mailto:info@universalgraphicservices.com' },
   { icon: Clock, label: 'WORKING HOURS', value: 'Mon - Sat: 9:00 AM - 7:00 PM' },
 ];
 
@@ -24,79 +24,9 @@ const categories = [
 ];
 
 const inputClass =
-  'w-full bg-brand-dark border border-white/10 focus:border-brand-red text-white text-[14px] px-4 py-4 outline-none transition-colors duration-300';
+  'w-full bg-brand-dark border border-white/10 focus:border-brand-red text-white text-[16px] px-4 py-4 outline-none transition-colors duration-300';
 const labelClass =
-  'text-gray-400 text-[10px] font-bold tracking-[0.2em] uppercase block mb-2.5';
-
-function CategorySelect({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className={`${inputClass} flex items-center justify-between text-left ${
-          open ? 'border-brand-red' : ''
-        } ${!value ? 'text-gray-500' : 'text-white'}`}
-      >
-        <span className="truncate pr-2">{value || 'Select a Category'}</span>
-        <ChevronDown
-          size={18}
-          className={`text-gray-400 shrink-0 transition-transform duration-300 ${
-            open ? 'rotate-180' : ''
-          }`}
-        />
-      </button>
-      <div
-        onWheel={(e) => {
-          const el = e.currentTarget;
-          if (el.scrollHeight > el.clientHeight) {
-            e.stopPropagation();
-          }
-        }}
-        className={`absolute top-full left-0 right-0 z-30 bg-brand-dark border border-brand-red/40 overflow-y-auto transition-all duration-300 ease-engineered ${
-          open ? 'max-h-[260px] opacity-100 mt-1' : 'max-h-0 opacity-0 mt-0'
-        }`}
-        style={{ scrollbarWidth: 'thin' }}
-      >
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            type="button"
-            onClick={() => {
-              onChange(cat);
-              setOpen(false);
-            }}
-            className={`w-full text-left px-4 py-3 text-[13px] flex items-center justify-between transition-colors duration-200 ${
-              value === cat
-                ? 'bg-brand-red/15 text-brand-red'
-                : 'text-gray-300 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            {cat}
-            {value === cat && <Check size={15} className="shrink-0" />}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
+  'text-gray-300 text-[12px] font-bold tracking-[0.2em] uppercase block mb-2.5';
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
@@ -126,19 +56,23 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const subject = `${form.category || 'Website enquiry'} — ${form.name.trim()}`;
+    const body = `Name: ${form.name}
+Email: ${form.email}
+Phone: ${form.phone}
+Company: ${form.company}
+
+${form.message}`;
+    window.location.href = `mailto:info@universalgraphicservices.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setForm({ name: '', email: '', phone: '', company: '', category: '', message: '' });
-    }, 4000);
   };
 
   return (
-    <section id="contact" className="bg-brand-dark py-24 px-6">
+    <section id="contact" className="bg-brand-dark py-16 md:py-24 px-5 sm:px-8">
       <div className="max-w-[1400px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-[1px] bg-white/[0.06]">
           {/* Left — Info */}
-          <div ref={leftRef} className="bg-brand-dark p-10 lg:p-14">
+          <div ref={leftRef} className="bg-brand-dark p-5 sm:p-8 lg:p-12">
             <div className="flex items-center gap-3 mb-5">
               <span className="w-8 h-[1px] bg-brand-red" />
               <span className="text-brand-red text-[11px] font-bold tracking-[0.3em] uppercase">
@@ -153,14 +87,14 @@ export default function Contact() {
             </p>
 
             <div className="space-y-7">
-              {contactInfo.map(({ icon: Icon, label, value }) => (
+              {contactInfo.map(({ icon: Icon, label, value, href }) => (
                 <div key={label} className="flex items-start gap-4">
                   <div className="w-11 h-11 border border-brand-red/30 flex items-center justify-center shrink-0">
                     <Icon size={18} className="text-brand-red" />
                   </div>
-                  <div>
-                    <div className="text-gray-500 text-[10px] font-bold tracking-[0.2em] mb-1">{label}</div>
-                    <div className="text-white text-[14px] font-medium leading-snug">{value}</div>
+                  <div className="min-w-0">
+                    <div className="text-gray-400 text-[12px] font-bold tracking-[0.2em] mb-1">{label}</div>
+                    <div className="text-white text-[15px] font-medium leading-relaxed break-words">{href ? <a href={href} className="text-[13px] sm:text-[15px] hover:underline underline-offset-4">{value}</a> : value}</div>
                   </div>
                 </div>
               ))}
@@ -168,13 +102,15 @@ export default function Contact() {
           </div>
 
           {/* Right — Form */}
-          <div ref={rightRef} className="bg-brand-charcoal p-10 lg:p-14">
+          <div ref={rightRef} className="bg-brand-charcoal p-5 sm:p-8 lg:p-12">
             <form onSubmit={handleSubmit} className="space-y-6">
+              <div><h3 className="font-display text-white text-3xl">SEND AN ENQUIRY</h3>
+              <p id="email-help" className="text-gray-400 text-sm leading-relaxed mt-2">Complete your details to prepare an email. You’ll review and send it in your email app.</p></div>
               <div>
-                <label className={labelClass}>Your Name</label>
+                <label htmlFor="contact-name" className={labelClass}>Your Name</label>
                 <input
                   required
-                  value={form.name}
+                  id="contact-name" name="name" autoComplete="name" value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   className={inputClass}
                   placeholder="Enter your name"
@@ -182,21 +118,21 @@ export default function Contact() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className={labelClass}>Email</label>
+                  <label htmlFor="contact-email" className={labelClass}>Email</label>
                   <input
                     required
                     type="email"
-                    value={form.email}
+                    id="contact-email" name="email" autoComplete="email" value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                     className={inputClass}
                     placeholder="you@email.com"
                   />
                 </div>
                 <div>
-                  <label className={labelClass}>Phone</label>
+                  <label htmlFor="contact-phone" className={labelClass}>Phone</label>
                   <input
                     required
-                    value={form.phone}
+                    type="tel" inputMode="tel" id="contact-phone" name="phone" autoComplete="tel" value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
                     className={inputClass}
                     placeholder="+91 98765 43210"
@@ -204,47 +140,42 @@ export default function Contact() {
                 </div>
               </div>
               <div>
-                <label className={labelClass}>Company Name</label>
+                <label htmlFor="contact-company" className={labelClass}>Company Name</label>
                 <input
-                  value={form.company}
+                  id="contact-company" name="company" autoComplete="organization" value={form.company}
                   onChange={(e) => setForm({ ...form, company: e.target.value })}
                   className={inputClass}
                   placeholder="Your company name"
                 />
               </div>
               <div>
-                <label className={labelClass}>Category</label>
-                <CategorySelect
-                  value={form.category}
-                  onChange={(v) => setForm({ ...form, category: v })}
-                />
+                <label htmlFor="contact-category" className={labelClass}>Category</label>
+                <div className="relative">
+                  <select id="contact-category" name="category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={`${inputClass} appearance-none pr-12`}>
+                    <option value="">Select a category</option>
+                    {categories.map(category => <option key={category}>{category}</option>)}
+                  </select>
+                  <ChevronDown aria-hidden="true" size={18} className="absolute right-4 top-5 pointer-events-none text-gray-400" />
+                </div>
               </div>
               <div>
-                <label className={labelClass}>Message</label>
+                <label htmlFor="contact-message" className={labelClass}>Message</label>
                 <textarea
                   required
                   rows={5}
-                  value={form.message}
+                  id="contact-message" name="message" autoComplete="off" value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className={`${inputClass} resize-none`}
+                  className={`${inputClass} resize-y min-h-[140px]`}
                   placeholder="Tell us about your requirement..."
                 />
               </div>
               <button
                 type="submit"
-                disabled={submitted}
                 className="w-full flex items-center justify-center gap-2 bg-brand-red hover:bg-[#c40510] disabled:bg-green-600 text-white text-[11px] font-bold tracking-[0.18em] uppercase px-6 py-4 transition-all duration-300 ease-engineered"
               >
-                {submitted ? (
-                  <>
-                    <CheckCircle2 size={16} /> MESSAGE SENT
-                  </>
-                ) : (
-                  <>
-                    SEND MESSAGE <Send size={14} />
-                  </>
-                )}
+                CONTINUE IN EMAIL <Send size={16} aria-hidden="true" />
               </button>
+              {submitted && <p role="status" className="text-gray-300 text-sm leading-relaxed">Your email app has been requested. Nothing has been sent automatically. If it didn’t open, email <a className="underline break-all" href="mailto:info@universalgraphicservices.com">info@universalgraphicservices.com</a> or call <a className="underline" href="tel:+919741101035">+91 97411 01035</a>. Your details remain here.</p>}
             </form>
           </div>
         </div>
