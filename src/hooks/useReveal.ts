@@ -1,5 +1,57 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
-// Content stays visible during navigation. Large sections are never hidden.
-export function useReveal<T extends HTMLElement = HTMLDivElement>() { return useRef<T>(null); }
-export function useStaggerReveal<T extends HTMLElement = HTMLDivElement>() { return useRef<T>(null); }
+export function useReveal<T extends HTMLElement = HTMLDivElement>() {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    el.classList.add('reveal');
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return ref;
+}
+
+export function useStaggerReveal<T extends HTMLElement = HTMLDivElement>() {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.01, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    el.classList.add('stagger');
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return ref;
+}
