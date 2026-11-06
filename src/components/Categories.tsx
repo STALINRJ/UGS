@@ -1,4 +1,3 @@
-import { products } from '../data/products';
 import { navigateTo } from '../utils/navigation';
 import { ArrowRight } from 'lucide-react';
 import { useReveal } from '../hooks/useReveal';
@@ -6,17 +5,17 @@ import { useReveal } from '../hooks/useReveal';
 const cats = [
   {
     num: '01',
-    title: 'CTP',
-    desc: 'New and pre-owned CTP equipment for your prepress workflow.',
-    img: products[1].img,
+    title: 'MACHINES',
+    desc: 'Pre-owned and refurbished offset presses, inspected and certified for maximum uptime and output quality.',
+    img: 'https://images.pexels.com/photos/9550363/pexels-photo-9550363.jpeg?auto=compress&cs=tinysrgb&w=1000',
     href: '#products',
-    filter: 'CTP',
+    filter: 'MACHINES',
   },
   {
     num: '02',
     title: 'SPARE PARTS',
     desc: 'Genuine OEM & compatible parts sourced for all major offset presses.',
-    img: products.find((product) => product.title === 'Processor Drive Components')!.img,
+    img: 'https://images.pexels.com/photos/7568428/pexels-photo-7568428.jpeg?auto=compress&cs=tinysrgb&w=800',
     href: '#products',
     filter: 'SPARE PARTS',
   },
@@ -24,7 +23,7 @@ const cats = [
     num: '03',
     title: 'CONSUMABLES',
     desc: 'High-performance inks, CTP plates, blankets and fountain solutions.',
-    img: products[0].img,
+    img: 'https://images.pexels.com/photos/19316517/pexels-photo-19316517.png?auto=compress&cs=tinysrgb&w=800',
     href: '#products',
     filter: 'CONSUMABLES',
   },
@@ -60,7 +59,7 @@ export default function Categories() {
       <img
         loading="lazy" decoding="async" src={cat.img}
         alt={cat.title}
-        className={`absolute inset-0 w-full h-full ${cat.filter ? "object-contain p-6 bg-white" : "object-cover"} img-zoom`}
+        className="absolute inset-0 w-full h-full object-cover img-zoom"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent" />
       <div className="relative h-full flex flex-col justify-end p-7 min-h-[300px]">
@@ -82,11 +81,11 @@ export default function Categories() {
       <img
         loading="lazy" decoding="async" src={cat.img}
         alt={cat.title}
-        className="absolute inset-0 w-full h-full object-cover object-center img-zoom"
+        className="absolute inset-0 w-full h-full object-cover img-zoom"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/90 via-brand-dark/65 to-brand-dark/10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent" />
       <div className="relative h-full flex flex-col justify-end p-6 min-h-[180px]">
-        <div className="text-white/70 text-[10px] font-bold tracking-[0.2em] mb-1.5">{cat.num} —</div>
+        <div className="text-gray-400 text-[10px] font-bold tracking-[0.2em] mb-1.5">{cat.num} —</div>
         <h3 className="font-display text-white text-[28px] leading-none mb-2">{cat.title}</h3>
         <p className="text-gray-300 text-[12px] leading-[1.6] mb-4 max-w-[220px]">{cat.desc}</p>
         <div className="flex items-center gap-2 text-white text-[10px] font-bold tracking-[0.18em] group-hover:gap-3.5 transition-all duration-300 ease-engineered">
